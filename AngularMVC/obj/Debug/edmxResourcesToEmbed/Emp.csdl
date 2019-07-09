@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="EntityType">
+    <Key>
+      <PropertyRef Name="EntityTypeId" />
+    </Key>
+    <Property Name="EntityTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Entity" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="ProducersActors" Relationship="Self.FK__Producers__Entit__3E52440B" FromRole="EntityType" ToRole="ProducersActors" />
+  </EntityType>
+  <EntityType Name="Movy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="YearOfRelease" Type="Int32" Nullable="false" />
+    <Property Name="ProducerId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="ProducersActor" Relationship="Self.FK__Movies__Producer__3D5E1FD2" FromRole="Movies" ToRole="ProducersActors" />
+    <NavigationProperty Name="MoviesActors" Relationship="Self.FK__MoviesAct__Movie__3F466844" FromRole="Movies" ToRole="MoviesActors" />
+  </EntityType>
+  <EntityType Name="MoviesActor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="MovieId" Type="Int32" Nullable="false" />
+    <Property Name="ActorId" Type="Int32" />
+    <NavigationProperty Name="Movy" Relationship="Self.FK__MoviesAct__Movie__3F466844" FromRole="MoviesActors" ToRole="Movies" />
+    <NavigationProperty Name="ProducersActor" Relationship="Self.FK__MoviesAct__Actor__403A8C7D" FromRole="MoviesActors" ToRole="ProducersActors" />
+  </EntityType>
+  <EntityType Name="ProducersActor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="EntityTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+    <Property Name="DOB" Type="DateTime" Precision="0" />
+    <Property Name="BIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="EntityType" Relationship="Self.FK__Producers__Entit__3E52440B" FromRole="ProducersActors" ToRole="EntityType" />
+    <NavigationProperty Name="Movies" Relationship="Self.FK__Movies__Producer__3D5E1FD2" FromRole="ProducersActors" ToRole="Movies" />
+    <NavigationProperty Name="MoviesActors" Relationship="Self.FK__MoviesAct__Actor__403A8C7D" FromRole="ProducersActors" ToRole="MoviesActors" />
+  </EntityType>
+  <Association Name="FK__Producers__Entit__3E52440B">
+    <End Role="EntityType" Type="Self.EntityType" Multiplicity="1" />
+    <End Role="ProducersActors" Type="Self.ProducersActor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EntityType">
+        <PropertyRef Name="EntityTypeId" />
+      </Principal>
+      <Dependent Role="ProducersActors">
+        <PropertyRef Name="EntityTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Movies__Producer__3D5E1FD2">
+    <End Role="ProducersActors" Type="Self.ProducersActor" Multiplicity="1" />
+    <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProducersActors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Movies">
+        <PropertyRef Name="ProducerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MoviesAct__Movie__3F466844">
+    <End Role="Movies" Type="Self.Movy" Multiplicity="1" />
+    <End Role="MoviesActors" Type="Self.MoviesActor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movies">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MoviesActors">
+        <PropertyRef Name="MovieId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MoviesAct__Actor__403A8C7D">
+    <End Role="ProducersActors" Type="Self.ProducersActor" Multiplicity="0..1" />
+    <End Role="MoviesActors" Type="Self.MoviesActor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProducersActors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MoviesActors">
+        <PropertyRef Name="ActorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="EntityTypes" EntityType="Self.EntityType" />
+    <EntitySet Name="Movies" EntityType="Self.Movy" />
+    <EntitySet Name="MoviesActors" EntityType="Self.MoviesActor" />
+    <EntitySet Name="ProducersActors" EntityType="Self.ProducersActor" />
+    <AssociationSet Name="FK__Producers__Entit__3E52440B" Association="Self.FK__Producers__Entit__3E52440B">
+      <End Role="EntityType" EntitySet="EntityTypes" />
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Movies__Producer__3D5E1FD2" Association="Self.FK__Movies__Producer__3D5E1FD2">
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+      <End Role="Movies" EntitySet="Movies" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MoviesAct__Movie__3F466844" Association="Self.FK__MoviesAct__Movie__3F466844">
+      <End Role="Movies" EntitySet="Movies" />
+      <End Role="MoviesActors" EntitySet="MoviesActors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MoviesAct__Actor__403A8C7D" Association="Self.FK__MoviesAct__Actor__403A8C7D">
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+      <End Role="MoviesActors" EntitySet="MoviesActors" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

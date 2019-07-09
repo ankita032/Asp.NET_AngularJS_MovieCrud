@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="EntityType">
+    <Key>
+      <PropertyRef Name="EntityTypeId" />
+    </Key>
+    <Property Name="EntityTypeId" Type="int" Nullable="false" />
+    <Property Name="Entity" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Movies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="YearOfRelease" Type="int" Nullable="false" />
+    <Property Name="ProducerId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MoviesActors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="MovieId" Type="int" Nullable="false" />
+    <Property Name="ActorId" Type="int" />
+  </EntityType>
+  <EntityType Name="ProducersActors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="EntityTypeId" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="Gender" Type="char" MaxLength="10" />
+    <Property Name="DOB" Type="date" />
+    <Property Name="BIO" Type="text" />
+  </EntityType>
+  <Association Name="FK__Movies__Producer__3D5E1FD2">
+    <End Role="ProducersActors" Type="Self.ProducersActors" Multiplicity="1" />
+    <End Role="Movies" Type="Self.Movies" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProducersActors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Movies">
+        <PropertyRef Name="ProducerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MoviesAct__Actor__403A8C7D">
+    <End Role="ProducersActors" Type="Self.ProducersActors" Multiplicity="0..1" />
+    <End Role="MoviesActors" Type="Self.MoviesActors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProducersActors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MoviesActors">
+        <PropertyRef Name="ActorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MoviesAct__Movie__3F466844">
+    <End Role="Movies" Type="Self.Movies" Multiplicity="1" />
+    <End Role="MoviesActors" Type="Self.MoviesActors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movies">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MoviesActors">
+        <PropertyRef Name="MovieId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Producers__Entit__3E52440B">
+    <End Role="EntityType" Type="Self.EntityType" Multiplicity="1" />
+    <End Role="ProducersActors" Type="Self.ProducersActors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EntityType">
+        <PropertyRef Name="EntityTypeId" />
+      </Principal>
+      <Dependent Role="ProducersActors">
+        <PropertyRef Name="EntityTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="EntityType" EntityType="Self.EntityType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Movies" EntityType="Self.Movies" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MoviesActors" EntityType="Self.MoviesActors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProducersActors" EntityType="Self.ProducersActors" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Movies__Producer__3D5E1FD2" Association="Self.FK__Movies__Producer__3D5E1FD2">
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+      <End Role="Movies" EntitySet="Movies" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MoviesAct__Actor__403A8C7D" Association="Self.FK__MoviesAct__Actor__403A8C7D">
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+      <End Role="MoviesActors" EntitySet="MoviesActors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MoviesAct__Movie__3F466844" Association="Self.FK__MoviesAct__Movie__3F466844">
+      <End Role="Movies" EntitySet="Movies" />
+      <End Role="MoviesActors" EntitySet="MoviesActors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Producers__Entit__3E52440B" Association="Self.FK__Producers__Entit__3E52440B">
+      <End Role="EntityType" EntitySet="EntityType" />
+      <End Role="ProducersActors" EntitySet="ProducersActors" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
